@@ -20,9 +20,9 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
-      // Only redirect if not already on login page
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
+      // Redirect to root if not already there
+      if (window.location.pathname !== '/' || (window.location.hash && window.location.hash !== '#/')) {
+        window.location.href = '/';
       }
     }
     return Promise.reject(error);

@@ -22,7 +22,7 @@ function ProtectedRoute({ children }) {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return children;
@@ -36,11 +36,8 @@ function App() {
       {user && <Navbar />}
       <main className={user ? 'pt-16' : ''}>
         <Routes>
-          <Route path="/login" element={
-            user ? <Navigate to="/" replace /> : <LoginPage />
-          } />
           <Route path="/" element={
-            <ProtectedRoute><Dashboard /></ProtectedRoute>
+            user ? <Dashboard /> : <LoginPage />
           } />
           <Route path="/groups/:id" element={
             <ProtectedRoute><GroupDetail /></ProtectedRoute>
