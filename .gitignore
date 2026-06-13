@@ -1,0 +1,10 @@
+node_modules/
+.env
+dist/
+.DS_Store
+*.log
+
+# Reference files (not for submission)
+INTERVIEW_PREP.md
+FAQ.md
+CSV_ANOMALIES_CHEATSHEET.md
