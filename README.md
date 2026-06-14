@@ -14,6 +14,18 @@ A full-stack web application for tracking shared expenses among flatmates, built
 - **Debt Simplification** — Minimized settlement plan (fewest transactions to settle all debts)
 - **Settlement Recording** — Record payments between members
 
+## Screenshots
+
+### Group Balances View
+Displays the calculated net balances for all flatmates, including detailed expandability to see exactly which expenses a member paid or owes.
+
+![Group Balances Screenshot](frontend/public/balances_screenshot.png)
+
+### Settle Up & Settlement Plan
+Suggests the simplified, greedy settlement transactions (who pays whom how much) and enables recording payments.
+
+![Settle Up Screenshot](frontend/public/settlement_screenshot.png)
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -94,7 +106,7 @@ Visit `http://localhost:5173` in your browser.
 - **Antigravity IDE (Claude)** — Used as primary development collaborator for architecture planning, code scaffolding, and debugging
 - See `AI_USAGE.md` for detailed usage log including cases where AI output was incorrect
 
-## Deployed URL
+## Deployed URLs
 
-<!-- Add your deployed URL here after deployment -->
-`https://your-deployed-url.vercel.app`
+- **Frontend Application (Static Site)**: [https://spreetail-za8l.onrender.com/](https://spreetail-za8l.onrender.com/)
+- **Backend API (Web Service)**: [https://spreetail-backend-hjek.onrender.com/](https://spreetail-backend-hjek.onrender.com/)
