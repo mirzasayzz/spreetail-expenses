@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
@@ -30,6 +31,26 @@ function ProtectedRoute({ children }) {
 
 function App() {
   const { user } = useAuth();
+
+  // Keep-alive ping to prevent Render backend from sleeping (every 14 minutes)
+  useEffect(() => {
+    const backendUrl = import.meta.env.VITE_API_URL || '';
+    
+    function pingBackend() {
+      fetch(`${backendUrl}/api/health`)
+        .then(res => res.json())
+        .then(data => console.log('Keep-alive ping successful:', data))
+        .catch(err => console.error('Keep-alive ping failed:', err));
+    }
+
+    // Ping once immediately on mount
+    pingBackend();
+
+    // Set interval for every 14 minutes (14 * 60 * 1000 ms)
+    const interval = setInterval(pingBackend, 14 * 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="min-h-screen bg-dark-900">
