@@ -9,6 +9,7 @@ function GroupDetail() {
   const [members, setMembers] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [showAddMember, setShowAddMember] = useState(false);
   const [newMemberEmail, setNewMemberEmail] = useState('');
   const [addingMember, setAddingMember] = useState(false);
@@ -20,6 +21,8 @@ function GroupDetail() {
   }, [id]);
 
   async function loadGroupData() {
+    setLoading(true);
+    setError(null);
     try {
       const [groupRes, expensesRes] = await Promise.all([
         groupsAPI.get(id),
@@ -30,6 +33,7 @@ function GroupDetail() {
       setExpenses(expensesRes.data.expenses);
     } catch (err) {
       console.error('Failed to load group:', err);
+      setError(err.response?.data?.error || 'Failed to load group data. Please check if the server is awake.');
     } finally {
       setLoading(false);
     }
@@ -88,7 +92,33 @@ function GroupDetail() {
     );
   }
 
-  if (!group) return <div className="text-center py-12 text-dark-300">Group not found</div>;
+  if (error) {
+    return (
+      <div className="max-w-md mx-auto px-4 py-12 text-center">
+        <div className="glass-card p-8 bg-dark-800/90 border border-dark-500/30 rounded-2xl shadow-xl">
+          <h2 className="text-xl font-semibold text-white mb-2">Connection Issue</h2>
+          <p className="text-dark-300 mb-6 text-sm">{error}</p>
+          <button onClick={loadGroupData} className="btn-primary w-full">
+            Retry Connection
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!group) {
+    return (
+      <div className="max-w-md mx-auto px-4 py-12 text-center">
+        <div className="glass-card p-8 bg-dark-800/90 border border-dark-500/30 rounded-2xl shadow-xl">
+          <h2 className="text-xl font-semibold text-white mb-2">Group Not Found</h2>
+          <p className="text-dark-300 mb-6 text-sm">The group you are looking for does not exist or you do not have permission to view it.</p>
+          <Link to="/" className="btn-primary block w-full text-center">
+            Go to Dashboard
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
