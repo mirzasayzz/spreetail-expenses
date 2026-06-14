@@ -116,8 +116,10 @@ router.post('/:id/import/confirm', async (req, res) => {
         [cleanName]
       );
 
+      let userId;
       if (userResult.rows.length > 0) {
-        nameToUserId[name] = userResult.rows[0].id;
+        userId = userResult.rows[0].id;
+        nameToUserId[name] = userId;
       } else {
         // Create a placeholder user for this person
         const email = `${cleanName.toLowerCase().replace(/\s+/g, '.')}@placeholder.local`;
@@ -125,14 +127,15 @@ router.post('/:id/import/confirm', async (req, res) => {
           'INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) ON CONFLICT (email) DO UPDATE SET name = $1 RETURNING id',
           [cleanName, email, 'placeholder_no_login']
         );
-        nameToUserId[name] = newUser.rows[0].id;
-
-        // Add them as a group member
-        await client.query(
-          'INSERT INTO group_members (group_id, user_id, joined_at) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING',
-          [groupId, newUser.rows[0].id, '2026-02-01']
-        );
+        userId = newUser.rows[0].id;
+        nameToUserId[name] = userId;
       }
+
+      // Add them as a group member (always ensure they are in this group!)
+      await client.query(
+        'INSERT INTO group_members (group_id, user_id, joined_at) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING',
+        [groupId, userId, '2026-02-01']
+      );
     }
 
     // Set membership dates for known people
